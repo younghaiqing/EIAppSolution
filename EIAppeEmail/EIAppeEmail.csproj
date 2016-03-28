@@ -38,6 +38,9 @@
     <Reference Include="Mail">
       <HintPath>..\packages\Mail.dll.3.0.16061.1530\lib\Net45\Mail.dll</HintPath>
     </Reference>
+    <Reference Include="OpenPop">
+      <HintPath>..\packages\OpenPop.NET.2.0.6.1120\lib\net40\OpenPop.dll</HintPath>
+    </Reference>
     <Reference Include="S22.Pop3">
       <HintPath>..\packages\S22.Pop3.1.2.4694.18487\lib\net40\S22.Pop3.dll</HintPath>
     </Reference>
@@ -50,6 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EMailModel.cs" />
+    <Compile Include="Pop3Helper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
