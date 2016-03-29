@@ -39,7 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IBaseRepository.cs" />
+    <Compile Include="IRoleRepository.cs" />
+    <Compile Include="IUserInfoRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EIApp.Models\EIApp.Models.csproj">
+      <Project>{2dde22d4-3e99-4d84-b9aa-50274d23254e}</Project>
+      <Name>EIApp.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

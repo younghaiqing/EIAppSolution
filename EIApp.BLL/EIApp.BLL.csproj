@@ -39,7 +39,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserInfoService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EIApp.DAL\EIApp.DAL.csproj">
+      <Project>{7af12630-452f-401d-94bd-c613f0c102c1}</Project>
+      <Name>EIApp.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EIApp.IBLL\EIApp.IBLL.csproj">
+      <Project>{74473563-d57a-409d-8953-2f95eb610165}</Project>
+      <Name>EIApp.IBLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EIApp.IDAL\EIApp.IDAL.csproj">
+      <Project>{9af06b7f-fb3b-4459-810c-dbaa18af34d4}</Project>
+      <Name>EIApp.IDAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EIApp.Models\EIApp.Models.csproj">
+      <Project>{2dde22d4-3e99-4d84-b9aa-50274d23254e}</Project>
+      <Name>EIApp.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
