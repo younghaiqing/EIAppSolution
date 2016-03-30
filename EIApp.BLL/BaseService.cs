@@ -33,9 +33,14 @@ namespace EIApp.BLL
             return CurrentRepository.DeleteEntity(entity);
         }
 
-        public IQueryable<T> LoadEntities(Func<T, bool> whereLambda)
+        public IQueryable<T> LoadEntities(System.Linq.Expressions.Expression<Func<T, bool>> whereLambda)
         {
             return CurrentRepository.LoadEntities(whereLambda);
+        }
+
+        public IQueryable<T> LoadPageEntities<S>(int pageIndex, int pageSize, out int total, System.Linq.Expressions.Expression<Func<T, bool>> whereLambda, bool isAsc, System.Linq.Expressions.Expression<Func<T, S>> orderByLambda)
+        {
+            throw new NotImplementedException();
         }
     }
 }

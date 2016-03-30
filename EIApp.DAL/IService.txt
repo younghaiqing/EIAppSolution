@@ -1,0 +1,31 @@
+﻿
+  //引进TT模板的命名空间
+
+
+//使用TT模板生成代码的片段
+
+using EIApp.IDAL;
+
+using EIApp.Models;
+
+ 
+
+namespace EIApp.DAL
+
+{
+
+    public partial class RoleRepository : BaseRepository<Role>, IRoleRepository
+
+    {
+
+    }
+
+
+    public partial class UserInfoRepository : BaseRepository<UserInfo>, IUserInfoRepository
+
+    {
+
+    }
+
+
+}
