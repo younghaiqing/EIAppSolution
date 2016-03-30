@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 namespace EIApp.Models
 {
     /// <summary>
-    /// 角色实体（定义成partial类方便以后扩展）
+    /// 模型层的基类（抽象类无法直接实例化）
     /// </summary>
-    public partial class Role : BaseEntity
+    public abstract class BaseEntity
     {
-        public int ID { set; get; }
-        public string RoleName { set; get; }
     }
 }

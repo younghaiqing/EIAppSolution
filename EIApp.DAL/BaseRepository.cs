@@ -1,7 +1,7 @@
 ﻿using EIApp.IDAL;
+using EIApp.Models;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace EIApp.DAL
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class,new()
+    /// <summary>
+    ///  实现IDAL接口的抽象类
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
-        private DbContext db = EFContextFactory.GetCurrentDbContext();
-
         public T AddEntity(T entity)
         {
-            db.Entry<T>(entity).State = EntityState.Added;
-            db.SaveChanges();
-            return entity;
+            throw new NotImplementedException();
         }
 
         public bool UpdateEntity(T entity)
@@ -34,7 +34,6 @@ namespace EIApp.DAL
         {
             throw new NotImplementedException();
         }
-
 
         public IQueryable<T> LoadPageEntities<S>(int pageIndex, int pageSize, out int total, Expression<Func<T, bool>> whereLambda, bool isAsc, Expression<Func<T, S>> orderByLambda)
         {

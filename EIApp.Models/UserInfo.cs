@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EIApp.Models
 {
-    public class UserInfo
+    public partial class UserInfo : BaseEntity
     {
         public int ID { set; get; }
         public string UName { set; get; }

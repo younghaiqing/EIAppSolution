@@ -1,4 +1,5 @@
 ﻿using EIApp.IBLL;
+using EIApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EIApp.BLL
 {
-    public abstract class BaseService<T> : IBaseService<T> where T : class,new()
+    public abstract class BaseService<T> : IBaseService<T> where T : BaseEntity
     {
         public IDAL.IBaseRepository<T> CurrentRepository { get; set; }
 

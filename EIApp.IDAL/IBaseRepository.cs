@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EIApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,7 +8,13 @@ using System.Threading.Tasks;
 
 namespace EIApp.IDAL
 {
-    public interface IBaseRepository<T> where T : class,new()
+    /// <summary>
+    /// DAL层数据操作接口
+    /// 包含主要的方法（增删改查）
+    /// 所有DAL层都需要实现这些方法
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface IBaseRepository<T> where T : BaseEntity
     {
         /// <summary>
         /// 实现对数据库的添加功能
@@ -17,7 +24,7 @@ namespace EIApp.IDAL
         T AddEntity(T entity);
 
         /// <summary>
-        /// D实现对数据库的修改功能
+        /// 实现对数据库的修改功能
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -32,6 +39,8 @@ namespace EIApp.IDAL
 
         /// <summary>
         /// 实现对数据库的查询（简单查询）
+        /// Expression<Func<T, bool>>参数可以动态生成查询所需要的表达式
+        /// 性能比Func<T, bool>委托好
         /// </summary>
         /// <param name="whereLambda"></param>
         /// <returns></returns>

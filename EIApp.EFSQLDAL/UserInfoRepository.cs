@@ -6,9 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EIApp.IBLL
+namespace EIApp.EFSQLDAL
 {
-    public interface IBaseService<T> : IBaseRepository<T> where T : BaseEntity
+    public class UserInfoRepository : BaseRepository<UserInfo>, IUserInfoRepository
     {
+
     }
 }
