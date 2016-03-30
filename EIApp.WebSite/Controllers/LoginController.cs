@@ -12,7 +12,14 @@ namespace EIApp.WebSite.Controllers
         // GET: /Login/
         public ActionResult Index()
         {
+            if(Session["UserInfo"]==null)
+            {
+                return Redirect("~/Login/UserLogin");
+            }
+            else
+            { 
             return View();
+            }
         }
 
         [HttpPost]
@@ -20,6 +27,7 @@ namespace EIApp.WebSite.Controllers
         {
             if (name != "")
             {
+                Session["UserInfo"] = name;
                 return Redirect("/Login/Index");
             }
             else
