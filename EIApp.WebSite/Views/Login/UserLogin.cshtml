@@ -1,0 +1,57 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>用户登录界面</title>
+    <link href="~/Content/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="~/Content/learunui-login.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.easyui.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#btlogin").bind("click", function () {
+                $.ajax({
+                    url: "../Login/UserLogin",
+                    data: { "name": "wwd" },
+                    type: "Post",
+                    success: function () {
+                        document.location.href = "../Login/Index";
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body class="Loginbody">
+    <div class="logo">
+    </div>
+
+    <div class="content">
+        <div class="Loginform">
+            <div class="form-message">
+            </div>
+            <div class="form-account">
+                账户
+                <input id="txtaccount" type="text" />
+            </div>
+            <div class="form-password">
+                密码
+                <input id="txtpassword" type="password" />
+            </div>
+            <div class="form-bottom">
+                <div id="btlogin" class="btlogin"></div>
+                @*<div>测试账户：guest，密码：123456 </div>
+                    <div>系统账户：System 密码:0000</div>*@
+            </div>
+        </div>
+    </div>
+    @*<div style="text-align: center; margin: 20px; font-family: Microsoft Yahei; color: #fff; margin: auto; width: 983px; padding-top: 30px;">
+            <p>适用浏览器：IE8以上、360、FireFox、Chrome、Safari、Opera、傲游、搜狗、世界之窗. </p>
+        </div>*@
+</body>
+</html>
