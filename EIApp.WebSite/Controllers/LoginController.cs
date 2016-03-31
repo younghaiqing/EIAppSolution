@@ -12,13 +12,13 @@ namespace EIApp.WebSite.Controllers
         // GET: /Login/
         public ActionResult Index()
         {
-            if(Session["UserInfo"]==null)
+            if (Session["UserInfo"] == null)
             {
                 return Redirect("~/Login/UserLogin");
             }
             else
-            { 
-            return View();
+            {
+                return View(new EIApp.Models.UserInfo() { ID = 1, UName = "wangwd", Pwd = "123" });
             }
         }
 
@@ -38,7 +38,15 @@ namespace EIApp.WebSite.Controllers
 
         public ActionResult UserLogin()
         {
+            ViewBag.Message = "this is Example!";
+            ViewData["Message"] = "test";
             return View();
+        }
+
+        [HttpPost]
+        public string Say()
+        {
+            return "Hello,World!";
         }
     }
 }
