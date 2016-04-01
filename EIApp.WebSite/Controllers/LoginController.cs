@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EIApp.WebSite.Filter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +11,7 @@ namespace EIApp.WebSite.Controllers
     {
         //
         // GET: /Login/
+        [MyCustormFilter]
         public ActionResult Index()
         {
             if (Session["UserInfo"] == null)

@@ -12,6 +12,8 @@ namespace EIApp.WebSite
     {
         protected void Application_Start()
         {
+            MvcHandler.DisableMvcResponseHeader = true;//隐藏MVC请求头中的MVC版本
+           
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
