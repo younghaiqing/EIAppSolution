@@ -14,7 +14,7 @@ namespace EIApp.Common
             get
             {
                 Hashtable ht = new Hashtable();
-                ht.Add("EIConString", "");
+                ht.Add("EIConString", @"Data Source=DO3FIT0920\SQLEXPRESS;Initial Catalog=EIDB;User Id=sa;Password=654321;");
                 return ht;
             }
         }
