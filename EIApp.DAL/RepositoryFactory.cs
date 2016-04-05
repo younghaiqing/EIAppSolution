@@ -16,5 +16,12 @@ namespace EIApp.DAL
                 return new UserInfoRepository();
             }
         }
+        public static IRoleRepository RoleRepository
+        {
+            get
+            {
+                return new RoleRepository();
+            }
+        }
     }
 }
