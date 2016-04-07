@@ -845,7 +845,7 @@
     <Content Include="Lib\jquery-easyui-1.4.5\locale\easyui-lang-ru.js" />
     <Content Include="Lib\jquery-easyui-1.4.5\locale\easyui-lang-sv_SE.js" />
     <Content Include="Lib\jquery-easyui-1.4.5\locale\easyui-lang-tr.js" />
-    <Content Include="Lib\jquery-easyui-1.4.5\locale\easyui-lang-zh_CN.js" />
+    <Content Include="Scripts\easyui-lang-zh_CN.js" />
     <Content Include="Lib\jquery-easyui-1.4.5\locale\easyui-lang-zh_TW.js" />
     <Content Include="Lib\jquery-easyui-1.4.5\plugins\jquery.accordion.js" />
     <Content Include="Lib\jquery-easyui-1.4.5\plugins\jquery.calendar.js" />
@@ -1276,6 +1276,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jscommon.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -1308,6 +1309,7 @@
     <Content Include="Views\Login\UserLogin.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Shared\_EILayout.cshtml" />
+    <Content Include="Views\Login\CreateUserInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1326,6 +1328,14 @@
     <ProjectReference Include="..\EIApp.BLL\EIApp.BLL.csproj">
       <Project>{c6c52dd1-1e85-4f49-b0c7-60e94e7ed0de}</Project>
       <Name>EIApp.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EIApp.IBLL\EIApp.IBLL.csproj">
+      <Project>{74473563-d57a-409d-8953-2f95eb610165}</Project>
+      <Name>EIApp.IBLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EIApp.IDAL\EIApp.IDAL.csproj">
+      <Project>{9af06b7f-fb3b-4459-810c-dbaa18af34d4}</Project>
+      <Name>EIApp.IDAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\EIApp.Models\EIApp.Models.csproj">
       <Project>{2dde22d4-3e99-4d84-b9aa-50274d23254e}</Project>

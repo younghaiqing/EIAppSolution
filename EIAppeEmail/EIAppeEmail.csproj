@@ -32,6 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="LumiSoft.Net">
       <HintPath>..\packages\LumiSoft.Net.dll.4.5.5702.26503\lib\net45\Release\LumiSoft.Net.dll</HintPath>
     </Reference>
@@ -45,6 +52,7 @@
       <HintPath>..\packages\S22.Pop3.1.2.4694.18487\lib\net40\S22.Pop3.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -64,6 +72,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EIApp.BLL\EIApp.BLL.csproj">
+      <Project>{c6c52dd1-1e85-4f49-b0c7-60e94e7ed0de}</Project>
+      <Name>EIApp.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EIApp.IBLL\EIApp.IBLL.csproj">
+      <Project>{74473563-d57a-409d-8953-2f95eb610165}</Project>
+      <Name>EIApp.IBLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EIApp.IDAL\EIApp.IDAL.csproj">
+      <Project>{9af06b7f-fb3b-4459-810c-dbaa18af34d4}</Project>
+      <Name>EIApp.IDAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EIApp.Models\EIApp.Models.csproj">
+      <Project>{2dde22d4-3e99-4d84-b9aa-50274d23254e}</Project>
+      <Name>EIApp.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

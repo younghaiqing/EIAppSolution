@@ -41,7 +41,7 @@ namespace EIApp.BLL
 
         public IQueryable<T> LoadPageEntities<S>(int pageIndex, int pageSize, out int total, System.Linq.Expressions.Expression<Func<T, bool>> whereLambda, bool isAsc, System.Linq.Expressions.Expression<Func<T, S>> orderByLambda)
         {
-            throw new NotImplementedException();
+            return CurrentRepository.LoadPageEntities<S>(pageIndex, pageSize, out  total, whereLambda, isAsc, orderByLambda);
         }
     }
 }
