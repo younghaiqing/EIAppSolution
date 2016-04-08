@@ -10,14 +10,26 @@ namespace EIApp.WebSite.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            if (Session["UserInfo"] == null)
+            {
+                return Redirect("~/Login/UserLogin");
+            }
+            else
+            {
+                return View();
+            }
         }
 
-        public ActionResult About()
+        public ActionResult Main()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            if (Session["UserInfo"] == null)
+            {
+                return Redirect("~/Login/UserLogin");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public ActionResult Contact()

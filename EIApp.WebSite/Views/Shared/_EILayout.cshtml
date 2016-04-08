@@ -12,11 +12,18 @@
     <script src="~/Scripts/jscommon.js"></script>
     @*@Styles.Render("~/Content/themes/gray/css")*@
     @*@Scripts.Render("~/myscript/js")*@
+    
 </head>
 <body class="easyui-layout">
     <div data-options="region:'north',border:false" style="height: 100px; background: #2e3e4e;"></div>
     <div data-options="region:'south',title:'CopyRight © 2010 - 2016 By Learn',collapsible:false"></div>
-    <div data-options="region:'west',title:'导航菜单',split:true" style="width:150px;"></div>
-    @RenderBody()
+    <div data-options="region:'west',title:'导航菜单',split:true" style="width:150px;">
+        @*其他部份内容*@
+        @RenderSection("MasterPart", false)
+    </div>
+    <div data-options="region:'center',border:false">
+
+        @RenderBody()
+    </div>
 </body>
 </html>

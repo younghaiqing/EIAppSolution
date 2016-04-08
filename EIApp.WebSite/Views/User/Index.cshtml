@@ -1,0 +1,94 @@
+﻿@{
+    Layout = null;
+}
+<script type="text/javascript">
+    $(function () {
+        $('#dg').DimsDG({
+            url: "/User/GetUserList",
+            pageSize: 30,
+            sortName: "ID",
+            sortOrder: 'dasc',
+            multiSort: true,
+            pageList: [10, 20, 30, 40, 50],
+            columns: [[
+                { field: 'ID', title: '序号', width: 100, sortable: true },
+                { field: 'UName', title: '名称', width: 100 },
+                { field: 'Pwd', title: '密码', width: 100 }
+            ]],
+            onBeforeLoad: function (param) {
+                //param
+                //console.log(param);
+            },
+            title: "<span class='icon-man'>&nbsp;&nbsp;</span>人员管理",
+            AddFuntion: function () {
+                $('#OperationDiv').DimsDialog({
+                    title: "新增数据", href: "/User/Create", iconCls: 'icon-man',
+                    OKFuntion: function () {
+                        $.ajax({
+                            url: "/User/Create",
+                            type: "Post",
+                            data: $("#OperationDiv").find("*").serialize(),
+                            dataType: "json",
+                            success: function (data) {
+                                if (data == 1) {
+                                    $.messager.show({
+                                        title: '提示',
+                                        icon: 'info',
+                                        msg: '处理成功',
+                                        timeout: 3000,
+                                        showType: 'slide'
+                                    });
+                                    $('#dg').datagrid("reload");
+                                    $('#OperationDiv').dialog("close");
+                                }
+                                else {
+                                    $.messager.show({
+                                        title: '提示',
+                                        icon: 'warning',
+                                        msg: '处理失败',
+                                        timeout: 3000,
+                                        showType: 'slide'
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            },
+            RemoveFuntion: function (row) {
+                $.ajax({
+                    url: "/User/Delete",
+                    type: "Post",
+                    data: { "ID": row.ID },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data == 1) {
+                            $.messager.show({
+                                title: '提示',
+                                icon: 'info',
+                                msg: '处理成功',
+                                timeout: 1000,
+                                showType: 'slide'
+                            });
+                            $('#dg').datagrid("reload");
+                        }
+                        else {
+                            $.messager.show({
+                                title: '提示',
+                                icon: 'warning',
+                                msg: '处理失败',
+                                timeout: 1000,
+                                showType: 'slide'
+                            });
+                        }
+                    }
+                });
+            }
+
+        });
+
+    })
+</script>
+
+<div id="dg"></div>
+<div id="OperationDiv"></div>
