@@ -15,12 +15,42 @@
     <script type="text/javascript">
         $(function () {
             $("#btlogin").bind("click", function () {
+                if ($("#txtaccount").val() == "")
+                {
+                    $.messager.show({
+                        title: '提示',
+                        icon: 'info',
+                        msg: '用户名不能为空',
+                        timeout: 3000,
+                        showType: 'slide'
+                    });
+                    $("#txtaccount").focus();
+                    return;
+                }
+                if ($("#txtpassword").val() == "") {
+                    $.messager.show({
+                        title: '提示',
+                        icon: 'info',
+                        msg: '密码不能为空',
+                        timeout: 3000,
+                        showType: 'slide'
+                    });
+                    $("#txtpassword").focus();
+                    return;
+                }
                 $.ajax({
                     url: "../Login/UserLogin",
-                    data: { "name": "wwd" },
+                    data: $(".Loginform").find("*").serializeArray(),
                     type: "Post",
-                    success: function () {
-                        document.location.href = "../Home/Index";
+                    dataType: "json",
+                    success: function (data) {
+                        if (data == 1) {
+                            $(".form-message").empty()
+                            document.location.href = "../Home/Index";
+                        }
+                        else {
+                            $(".form-message").empty().html("<font color='red'>您输入的用户名密码不正确！</font>");
+                        }
                     }
                 })
             })
@@ -38,11 +68,11 @@
             </div>
             <div class="form-account">
                 账户
-                <input id="txtaccount" type="text" />
+                <input id="txtaccount" type="text" name="UName" />
             </div>
             <div class="form-password">
                 密码
-                <input id="txtpassword" type="password" />
+                <input id="txtpassword" type="password" name="Pwd" />
             </div>
             <div class="form-bottom">
                 <div id="btlogin" class="btlogin"></div>

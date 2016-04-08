@@ -13,20 +13,20 @@ namespace EIApp.WebSite.Controllers
         //
         // GET: /Login/
 
-       
-
         [HttpPost]
-        public ActionResult UserLogin(string name)
+        public JsonResult UserLogin(EIApp.Models.UserInfo model)
         {
-            if (name != "")
+            int intret = 0;
+            if (model != null && !string.IsNullOrEmpty(model.UName) && !string.IsNullOrEmpty(model.UName))
             {
-                Session["UserInfo"] = name;
-                return Redirect("/Home/Index");
+                var LoginUser = bll.LoadEntities(m => m.UName.Equals(model.UName)).FirstOrDefault();
+                if (LoginUser != null && LoginUser.Pwd.Equals(model.Pwd))
+                {
+                    Session["UserInfo"] = model;
+                    intret = 1;
+                }
             }
-            else
-            {
-                return View();
-            }
+            return Json(intret, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult UserLogin()
