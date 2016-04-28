@@ -48,6 +48,15 @@ namespace EIApp.Common
             var modelProperties = modelType.GetProperties();//获取所有属性
             //获取属性的名称数组
             var PropertiesArray = modelProperties.Where(m => IsContainProperty(m)).Select(m => m.Name).ToArray();
+            if (string.IsNullOrEmpty(model.OrderByStrs))
+            {
+                model.OrderByStrs = GetTableKey(modelType);//如果排序栏位是空，则使用Key
+            }
+            if (string.IsNullOrEmpty(model.WhereStrs))
+            {
+                model.WhereStrs = " 1=1 ";//如果查询条件是空，则使用1=1
+            }
+
             sql.AppendFormat("SELECT {0} FROM {1} WHERE 1=1 ", string.Join(",", PropertiesArray), GetTableName(modelType));
 
             foreach (var Property in modelProperties)
@@ -61,7 +70,10 @@ namespace EIApp.Common
                     }
                 }
             }
-
+            //查询条件
+            sql.AppendFormat(" AND {0}", model.WhereStrs);
+            //排序
+            sql.AppendFormat("  ORDER BY {0}", model.OrderByStrs);
             return DBHelper.ExecuteDataTable(sql.ToString(), sqlParamList.ToArray());
         }
 
