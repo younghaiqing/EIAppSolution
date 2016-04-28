@@ -10,75 +10,18 @@ using System.Threading.Tasks;
 
 namespace EIApp.Common
 {
+    #region 所有DAL的基类实现基本的CURD(增删改查,分页)
+
     /// <summary>
-    /// 所有DAL的基类实现基本的CURD(增删改查)
+    /// 所有DAL的基类实现基本的CURD(增删改查,分页)
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class SqlDataAccessBase<T> where T : AbstractBaseModel
+    public abstract class SqlDataAccessBase<T> : SqlDataAccessBaseReport<T> where T : AbstractBaseModel
     {
-        #region 构造函数及虚方法
-
-        private IDBHelper DBHelper;
-
-        public SqlDataAccessBase()
-        {
-            this.DBHelper = SetDBHelper();
-            if (this.DBHelper == null)
-            {
-                throw new Exception("IDBHelper接口需要实例化,请确保实例化该类型");
-            }
-        }
-
-        public abstract IDBHelper SetDBHelper();
-
-        #endregion 构造函数及虚方法
-
         #region CURD
 
         /// <summary>
-        /// 更新模型条件查询
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public DataTable SelectBy(T model)
-        {
-            StringBuilder sql = new StringBuilder();
-            List<SqlParameter> sqlParamList = new List<SqlParameter>();
-            var modelType = model.GetType();
-            var modelProperties = modelType.GetProperties();//获取所有属性
-            //获取属性的名称数组
-            var PropertiesArray = modelProperties.Where(m => IsContainProperty(m)).Select(m => m.Name).ToArray();
-            if (string.IsNullOrEmpty(model.OrderByStrs))
-            {
-                model.OrderByStrs = GetTableKey(modelType);//如果排序栏位是空，则使用Key
-            }
-            if (string.IsNullOrEmpty(model.WhereStrs))
-            {
-                model.WhereStrs = " 1=1 ";//如果查询条件是空，则使用1=1
-            }
-
-            sql.AppendFormat("SELECT {0} FROM {1} WHERE 1=1 ", string.Join(",", PropertiesArray), GetTableName(modelType));
-
-            foreach (var Property in modelProperties)
-            {
-                if (IsContainProperty(Property))
-                {
-                    if (Property.GetValue(model) != null && !Property.GetValue(model).Equals(DefaultForType(Property.PropertyType)))
-                    {
-                        sql.AppendFormat("AND {0} = @{0} ", Property.Name);
-                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model)));
-                    }
-                }
-            }
-            //查询条件
-            sql.AppendFormat(" AND {0}", model.WhereStrs);
-            //排序
-            sql.AppendFormat("  ORDER BY {0}", model.OrderByStrs);
-            return DBHelper.ExecuteDataTable(sql.ToString(), sqlParamList.ToArray());
-        }
-
-        /// <summary>
-        /// 更新模型插入
+        /// 模型插入
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -117,7 +60,7 @@ namespace EIApp.Common
         }
 
         /// <summary>
-        /// 更新模型修改
+        /// 模型修改
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -187,7 +130,88 @@ namespace EIApp.Common
         }
 
         #endregion CURD
+    }
 
+    #endregion 所有DAL的基类实现基本的CURD(增删改查,分页)
+
+    #region 只包含查询及分页查询DAL
+
+    /// <summary>
+    /// 只包含查询及分页查询DAL
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public abstract class SqlDataAccessBaseReport<T> where T : AbstractBaseModel
+    {
+        #region 构造函数及虚方法
+
+        protected IDBHelper DBHelper;
+
+        public SqlDataAccessBaseReport()
+        {
+            this.DBHelper = SetDBHelper();
+            if (this.DBHelper == null)
+            {
+                throw new Exception("IDBHelper接口需要实例化,请确保实例化该类型");
+            }
+            //if(string.IsNullOrEmpty(this.DBHelper.ConnString))
+            //{
+            //    throw new Exception("IDBHelper接口需要实例化,请确保实例化该类型");
+            //}
+        }
+
+        public abstract IDBHelper SetDBHelper();
+
+        #endregion 构造函数及虚方法
+
+        #region 查询方法
+
+        /// <summary>
+        /// 条件查询
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public DataTable SelectBy(T model)
+        {
+            StringBuilder sql = new StringBuilder();
+            List<SqlParameter> sqlParamList = new List<SqlParameter>();
+            var modelType = model.GetType();
+            var modelProperties = modelType.GetProperties();//获取所有属性
+            //获取属性的名称数组
+            var PropertiesArray = modelProperties.Where(m => IsContainProperty(m)).Select(m => m.Name).ToArray();
+            if (string.IsNullOrEmpty(model.OrderByStrs))
+            {
+                model.OrderByStrs = GetTableKey(modelType);//如果排序栏位是空，则使用Key
+            }
+            if (string.IsNullOrEmpty(model.WhereStrs))
+            {
+                model.WhereStrs = " 1=1 ";//如果查询条件是空，则使用1=1
+            }
+
+            sql.AppendFormat("SELECT {0} FROM {1} WHERE 1=1 ", string.Join(",", PropertiesArray), GetTableName(modelType));
+
+            foreach (var Property in modelProperties)
+            {
+                if (IsContainProperty(Property))
+                {
+                    if (Property.GetValue(model) != null && !Property.GetValue(model).Equals(DefaultForType(Property.PropertyType)))
+                    {
+                        sql.AppendFormat("AND {0} = @{0} ", Property.Name);
+                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model)));
+                    }
+                }
+            }
+            //查询条件
+            sql.AppendFormat(" AND {0}", model.WhereStrs);
+            //排序
+            sql.AppendFormat("  ORDER BY {0}", model.OrderByStrs);
+            return DBHelper.ExecuteDataTable(sql.ToString(), sqlParamList.ToArray());
+        }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public DataTable SelectByPage(T model)
         {
             StringBuilder sql = new StringBuilder();
@@ -224,6 +248,8 @@ namespace EIApp.Common
             return DBHelper.ExecuteDataTable(sql.ToString(), sqlParamList.ToArray());
         }
 
+        #endregion 查询方法
+
         #region 私有方法
 
         /// <summary>
@@ -231,7 +257,7 @@ namespace EIApp.Common
         /// </summary>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        private string GetTableName(Type targetType)
+        protected string GetTableName(Type targetType)
         {
             string tableName = string.Empty;
             tableName = targetType.Name;
@@ -255,7 +281,7 @@ namespace EIApp.Common
         /// </summary>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        private string GetTableKey(Type targetType)
+        protected string GetTableKey(Type targetType)
         {
             string tableKey = string.Empty;
             tableKey = "ID";
@@ -279,7 +305,7 @@ namespace EIApp.Common
         /// </summary>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        private object DefaultForType(Type targetType)
+        protected object DefaultForType(Type targetType)
         {
             object DefaultValue = null;
             if (targetType == typeof(DateTime))//如果是DateTime，使用DateTime默认值
@@ -299,7 +325,7 @@ namespace EIApp.Common
         /// </summary>
         /// <param name="pi"></param>
         /// <returns></returns>
-        private bool IsContainProperty(PropertyInfo pi)
+        protected bool IsContainProperty(PropertyInfo pi)
         {
             bool flag = true;
             var CustomAttributes = pi.GetCustomAttributes(true);
@@ -317,6 +343,8 @@ namespace EIApp.Common
 
         #endregion 私有方法
     }
+
+    #endregion 只包含查询及分页查询DAL
 
     #region 特性Attribute
 
@@ -364,6 +392,11 @@ namespace EIApp.Common
 
     #endregion DBHelper接口
 
+    #region 基础模型类型
+
+    /// <summary>
+    /// 基础模型类型
+    /// </summary>
     public abstract class AbstractBaseModel
     {
         /// <summary>
@@ -393,4 +426,6 @@ namespace EIApp.Common
         [NoPropertyContain]
         public string WhereStrs { set; get; }
     }
+
+    #endregion 基础模型类型
 }
