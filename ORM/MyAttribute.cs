@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace WindyOrm
+namespace ORM
 {
     #region 特性Attribute
 
@@ -21,6 +17,11 @@ namespace WindyOrm
     /// </summary>
     public class TableNameAttribute : Attribute
     {
+        public TableNameAttribute(string TableKey)
+        {
+            this.TableKey = TableKey;
+        }
+
         /// <summary>
         /// 表的自定义名称
         /// </summary>

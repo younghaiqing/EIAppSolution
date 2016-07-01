@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace WindyOrm
+namespace ORM
 {
     #region DBHelper接口
 
@@ -22,6 +19,8 @@ namespace WindyOrm
         int ExecuteNonQuery(string sql, SqlParameter[] sqlParams);
 
         Object ExecuteScalar(string sql, SqlParameter[] parameters);
+
+        bool ExecuteTransaction(Dictionary<string, SqlParameter[]> sqlAndPara, bool earlyTermination);
     }
 
     #endregion DBHelper接口

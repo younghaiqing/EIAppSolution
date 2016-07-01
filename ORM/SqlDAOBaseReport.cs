@@ -5,9 +5,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace WindyOrm
+namespace ORM
 {
     #region 只包含查询及分页查询DAL
 
@@ -55,23 +54,23 @@ namespace WindyOrm
             var PropertiesArray = modelProperties.Where(m => IsContainProperty(m)).Select(m => m.Name).ToArray();
             if (string.IsNullOrEmpty(model.OrderByStrs))
             {
-                model.OrderByStrs = GetTableKey(modelType);//如果排序栏位是空，则使用Key
+                model.OrderByStrs = GetTableKey(modelType) + " DESC ";//如果排序栏位是空，则使用Key
             }
             if (string.IsNullOrEmpty(model.WhereStrs))
             {
                 model.WhereStrs = " 1=1 ";//如果查询条件是空，则使用1=1
             }
 
-            sql.AppendFormat("SELECT {0} FROM {1} WHERE 1=1 ", string.Join(",", PropertiesArray), GetTableName(modelType));
+            sql.AppendFormat("SELECT [{0}] FROM {1} WHERE 1=1 ", string.Join("],[", PropertiesArray), GetTableName(modelType));
 
             foreach (var Property in modelProperties)
             {
                 if (IsContainProperty(Property))
                 {
-                    if (Property.GetValue(model) != null && !Property.GetValue(model).Equals(DefaultForType(Property.PropertyType)))
+                    if (Property.GetValue(model, null) != null && !Property.GetValue(model, null).Equals(DefaultForType(Property.PropertyType)))
                     {
-                        sql.AppendFormat("AND {0} = @{0} ", Property.Name);
-                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model)));
+                        sql.AppendFormat("AND [{0}] = @{0} ", Property.Name);
+                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model, null)));
                     }
                 }
             }
@@ -97,27 +96,61 @@ namespace WindyOrm
             var PropertiesArray = modelProperties.Where(m => IsContainProperty(m)).Select(m => m.Name).ToArray();
             if (string.IsNullOrEmpty(model.OrderByStrs))
             {
-                model.OrderByStrs = GetTableKey(modelType);//如果排序栏位是空，则使用Key
+                model.OrderByStrs = GetTableKey(modelType) + " DESC ";//如果排序栏位是空，则使用Key
             }
             if (string.IsNullOrEmpty(model.WhereStrs))
             {
                 model.WhereStrs = " 1=1 ";//如果查询条件是空，则使用1=1
             }
 
-            string totalSql = @"SELECT count(*) FROM " + GetTableName(modelType) + " WHERE 1=1 AND " + model.WhereStrs;
+            sql.Append(@"SELECT count(*) FROM " + GetTableName(modelType) + " WHERE 1=1 ");
+
+            foreach (var Property in modelProperties)
+            {
+                if (IsContainProperty(Property))
+                {
+                    if (Property.GetValue(model, null) != null && !Property.GetValue(model, null).Equals(DefaultForType(Property.PropertyType)))
+                    {
+                        sql.AppendFormat("AND [{0}] = @{0} ", Property.Name);
+                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model, null)));
+                    }
+                }
+            }
+            //查询条件
+            sql.AppendFormat(" AND {0}", model.WhereStrs);
+
             //获取总的行数
-            var TotalCount = DBHelper.ExecuteScalar(totalSql, null);
+            var TotalCount = DBHelper.ExecuteScalar(sql.ToString(), sqlParamList.ToArray());
             if (TotalCount != null)
             {
                 model.TotalCount = Convert.ToInt32(TotalCount);
             }
 
-            sql.AppendFormat("SELECT {0} FROM ", string.Join(",", PropertiesArray));
+            //初始sql,sqlParamList
+            sql = new StringBuilder();
+            sqlParamList = new List<SqlParameter>();
 
-            sql.AppendFormat(@"(SELECT {0},ROW_NUMBER() OVER ( ORDER BY " + model.OrderByStrs + @") AS RowNumber
+            sql.AppendFormat("SELECT [{0}] FROM ", string.Join("],[", PropertiesArray));
 
-                                FROM {1} WHERE 1=1 AND {2}) as T WHERE 1=1  ", string.Join(",", PropertiesArray), GetTableName(modelType), model.WhereStrs);
-            sql.AppendFormat(" AND RowNumber>{0} AND RowNumber<={1}", model.PageSize * (model.PageIndex - 1), model.PageSize * model.PageIndex);
+            sql.AppendFormat(@"(SELECT [{0}],ROW_NUMBER() OVER ( ORDER BY " + model.OrderByStrs + @") AS RowNumber
+
+                                FROM {1} WHERE 1=1 ", string.Join("],[", PropertiesArray), GetTableName(modelType));
+
+            foreach (var Property in modelProperties)
+            {
+                if (IsContainProperty(Property))
+                {
+                    if (Property.GetValue(model, null) != null && !Property.GetValue(model, null).Equals(DefaultForType(Property.PropertyType)))
+                    {
+                        sql.AppendFormat("AND [{0}] = @{0} ", Property.Name);
+                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model, null)));
+                    }
+                }
+            }
+            //查询条件
+            sql.AppendFormat(" AND {0}", model.WhereStrs);
+
+            sql.AppendFormat(" ) as T WHERE 1=1   AND RowNumber>{0} AND RowNumber<={1}", model.PageSize * (model.PageIndex - 1), model.PageSize * model.PageIndex);
             sql.AppendFormat(" ORDER BY " + model.OrderByStrs);
 
             return DBHelper.ExecuteDataTable(sql.ToString(), sqlParamList.ToArray());

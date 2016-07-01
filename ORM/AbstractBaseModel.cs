@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WindyOrm
+namespace ORM
 {
     #region 基础模型类型
 

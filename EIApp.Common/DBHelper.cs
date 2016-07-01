@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EIApp.Common;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace WindyOrm
+namespace DataAccess
 {
     /// <summary>
     /// DBHelper对SQL数据库进行操作

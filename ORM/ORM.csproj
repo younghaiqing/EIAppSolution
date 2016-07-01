@@ -4,13 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D418002E-EE74-4DD6-A573-CD1EA515F76B}</ProjectGuid>
+    <ProjectGuid>{EB7891B1-80AC-44F1-AD8B-7060F33EADFC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindyOrm</RootNamespace>
-    <AssemblyName>WindyOrm</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>ORM</RootNamespace>
+    <AssemblyName>ORM</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,15 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractBaseModel.cs" />
-    <Compile Include="BLL\SqlBLLBase.cs" />
-    <Compile Include="BLL\SqlDAO.cs" />
-    <Compile Include="DBHelper.cs" />
     <Compile Include="IDBHelper.cs" />
     <Compile Include="MyAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlDAOBase.cs" />
     <Compile Include="SqlDAOBaseReport.cs" />
-    <Compile Include="Table2Model.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

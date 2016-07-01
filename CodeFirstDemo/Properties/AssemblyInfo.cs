@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("WindyOrm")]
+[assembly: AssemblyTitle("CodeFirstDemo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("WindyOrm")]
+[assembly: AssemblyProduct("CodeFirstDemo")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("e7bf9060-f48f-4080-98f5-df4cb373be31")]
+[assembly: Guid("cedec762-8459-4719-a69d-1429646a210e")]
 
 // 程序集的版本信息由下面四个值组成: 
 //

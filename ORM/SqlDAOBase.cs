@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace WindyOrm
+namespace ORM
 {
     #region 所有DAL的基类实现基本的CURD(增删改查,分页)
 
@@ -24,7 +21,7 @@ namespace WindyOrm
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int InsertBy(T model)
+        public int CreateBy(T model)
         {
             StringBuilder sql = new StringBuilder();     //拼接最后的SQL语句
             StringBuilder field = new StringBuilder();   //拼接字段名
@@ -44,18 +41,64 @@ namespace WindyOrm
                     {
                         continue;
                     }
-                    if (Property.GetValue(model) != null
-                        && !Property.GetValue(model).Equals(DefaultForType(Property.PropertyType)))
+                    if (Property.GetValue(model, null) != null
+                        && !Property.GetValue(model, null).Equals(DefaultForType(Property.PropertyType)))
                     {
-                        field.AppendFormat(" {0}, ", Property.Name);
+                        field.AppendFormat(" [{0}], ", Property.Name);
                         value.AppendFormat(" @{0}, ", Property.Name);
-                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model)));
+                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model, null)));
                     }
                 }
             }
             sql.AppendFormat("INSERT INTO {0} ({1}) VALUES({2}); ", GetTableName(modelType), field.ToString().Remove(field.ToString().LastIndexOf(","), 1), value.ToString().Remove(value.ToString().LastIndexOf(","), 1));
+            sql.Append(";SELECT ISNULL(@@identity,-1)");
 
-            return DBHelper.ExecuteNonQuery(sql.ToString(), sqlParamList.ToArray());
+            return Convert.ToInt32(DBHelper.ExecuteScalar(sql.ToString(), sqlParamList.ToArray()));
+        }
+
+        /// <summary>
+        /// 新建多条数据
+        /// </summary>
+        /// <param name="modelList">多条model</param>
+        /// <returns></returns>
+        public bool CreateList(List<T> modelList)
+        {
+            Dictionary<string, SqlParameter[]> sqlAndPara = new Dictionary<string, SqlParameter[]>();
+            int i = 0;
+            foreach (T model in modelList)
+            {
+                StringBuilder sql = new StringBuilder();     //拼接最后的SQL语句
+                StringBuilder field = new StringBuilder();   //拼接字段名
+                StringBuilder value = new StringBuilder();   //拼接字段对应的值
+                List<SqlParameter> sqlParamList = new List<SqlParameter>();
+                var modelType = model.GetType();
+                var modelProperties = modelType.GetProperties();//获取所有属性
+                //获取属性的名称数组
+                var PropertiesArray = modelProperties.Where(m => IsContainProperty(m)).Select(m => m.Name).ToArray();
+                i = i + 1;
+                foreach (var Property in modelProperties)
+                {
+                    if (IsContainProperty(Property))//需要包含的字段
+                    {
+                        if (Property.Name == GetTableKey(modelType))//如果是主键
+                        {
+                            continue;
+                        }
+                        if (Property.GetValue(model, null) != null
+                            && !Property.GetValue(model, null).Equals(DefaultForType(Property.PropertyType)))
+                        {
+                            field.AppendFormat(" [{0}], ", Property.Name);
+                            value.AppendFormat(" @{0}" + i + ", ", Property.Name);
+                            sqlParamList.Add(new SqlParameter(Property.Name + i, Property.GetValue(model, null)));
+                        }
+                    }
+                }
+                sql.AppendFormat("INSERT INTO {0} ({1}) VALUES({2}); ", GetTableName(modelType), field.ToString().Remove(field.ToString().LastIndexOf(","), 1), value.ToString().Remove(value.ToString().LastIndexOf(","), 1));
+
+                sqlAndPara.Add(sql.ToString(), sqlParamList.ToArray());
+            }
+
+            return DBHelper.ExecuteTransaction(sqlAndPara, true);
         }
 
         /// <summary>
@@ -63,7 +106,7 @@ namespace WindyOrm
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int ModifyBy(T model)
+        public int UpdateBy(T model)
         {
             StringBuilder sql = new StringBuilder();
             StringBuilder set = new StringBuilder();
@@ -80,20 +123,29 @@ namespace WindyOrm
                 {
                     if (Property.Name == GetTableKey(modelType))//如果是主键
                     {
-                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model)));
+                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model, null)));
                         continue;
                     }
-                    if (Property.GetValue(model) != null && !Property.GetValue(model).Equals(DefaultForType(Property.PropertyType)))
+                    if (Property.GetValue(model, null) != null && !Property.GetValue(model, null).Equals(DefaultForType(Property.PropertyType)))
                     {
-                        set.AppendFormat(" {0} = @{0}, ", Property.Name);
-                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model)));
+                        set.AppendFormat(" [{0}] = @{0}, ", Property.Name);
+                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model, null)));
                     }
                 }
             }
 
             sql.AppendFormat("UPDATE {0} SET {1} ", GetTableName(modelType), set.ToString().Remove(set.ToString().LastIndexOf(","), 1))
-               .Append("WHERE 1 = 1 ")
-               .AppendFormat("AND {0} = @{0}", GetTableKey(modelType));
+               .Append("WHERE 1 = 1 ");
+            //如果Where条件是空则使用主键更新
+            if (string.IsNullOrEmpty(model.WhereStrs))
+            {
+                sql.AppendFormat("AND {0} = @{0}", GetTableKey(modelType));
+            }
+            else
+            {
+                //查询条件
+                sql.AppendFormat(" AND {0}", model.WhereStrs);
+            }
 
             return DBHelper.ExecuteNonQuery(sql.ToString(), sqlParamList.ToArray());
         }
@@ -117,10 +169,10 @@ namespace WindyOrm
             {
                 if (IsContainProperty(Property))
                 {
-                    if (Property.GetValue(model) != null && !Property.GetValue(model).Equals(DefaultForType(Property.PropertyType)))
+                    if (Property.GetValue(model, null) != null && !Property.GetValue(model, null).Equals(DefaultForType(Property.PropertyType)))
                     {
-                        sql.AppendFormat("AND {0} = @{0} ", Property.Name);
-                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model)));
+                        sql.AppendFormat("AND [{0}] = @{0} ", Property.Name);
+                        sqlParamList.Add(new SqlParameter(Property.Name, Property.GetValue(model, null)));
                     }
                 }
             }
