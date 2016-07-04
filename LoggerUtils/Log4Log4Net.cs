@@ -1,15 +1,12 @@
-﻿namespace LoggerUtils
-{
-    public class Log4Nlog : Log4ILog
-    {
-        private NLog.Logger logger = null;
+﻿using log4net;
 
-        public Log4Nlog()
-        {
-            //配置文件位置
-            NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("LogConfig/NLog.config");
-            logger = NLog.LogManager.GetCurrentClassLogger();
-        }
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "LogConfig/log4net.config", Watch = true)]
+
+namespace LoggerUtils
+{
+    public class Log4Log4Net : Log4ILog
+    {
+        private ILog logger = log4net.LogManager.GetLogger(typeof(Log4Log4Net));
 
         /// <summary>
         /// Debug Log

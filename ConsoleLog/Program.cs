@@ -6,10 +6,10 @@ namespace ConsoleLog
     {
         private static void Main(string[] args)
         {
-            //输出一个日志到文件夹中
-            LoggerUtils.Log4Nlog log = new LoggerUtils.Log4Nlog();
-            log.WriteErrorLog("Error222");
-            Console.ReadKey();
+            LoggerUtils.Log4ILog log = new LoggerUtils.Log4Nlog() ;//new LoggerUtils.Log4Log4Net();
+            log.WriteDebugLog("test");
+            Console.WriteLine("日志记录完毕。");
+            Console.Read();
         }
     }
 }
