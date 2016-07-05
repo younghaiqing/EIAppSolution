@@ -11,6 +11,13 @@
             logger = NLog.LogManager.GetCurrentClassLogger();
         }
 
+        public Log4Nlog(string name)
+        {
+            //配置文件位置
+            NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("LogConfig/NLog.config");
+            logger = NLog.LogManager.GetLogger(name);
+        }
+
         /// <summary>
         /// Debug Log
         /// </summary>

@@ -6,8 +6,17 @@ namespace LoggerUtils
 {
     public class Log4Log4Net : Log4ILog
     {
-        private ILog logger = log4net.LogManager.GetLogger(typeof(Log4Log4Net));
+        private ILog logger = null;
 
+        public Log4Log4Net()
+        {
+            logger = log4net.LogManager.GetLogger(typeof(Log4Log4Net));
+        }
+
+        public Log4Log4Net(string name)
+        {
+            logger = log4net.LogManager.GetLogger(name);
+        }
         /// <summary>
         /// Debug Log
         /// </summary>
